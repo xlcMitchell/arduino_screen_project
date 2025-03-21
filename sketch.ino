@@ -14,7 +14,8 @@
 
 const int SCREEN_WIDTH = 128; // OLED display width, in pixels
 const int SCREEN_HEIGHT = 64; // OLED display height, in pixels
-
+int intro = 0;
+int temperature;
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
@@ -28,23 +29,31 @@ void setup() {
 }
 
 void loop() {
-  display.clearDisplay();
-
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(20, 10);
+  
+  if(intro == 0){
+  setDisplayProperties(20);
   // Display static text
   display.println("Software");
   display.display();
-  delay(2000);
+  delay(1500);
   setDisplayProperties(50);
   display.println("by");
   display.display();
-  delay(2000);
+  delay(1500);
   setDisplayProperties(20);
   display.println("Mitchell");
   display.display();
-  delay(1000);
+  delay(1500);
+  intro = 1;
+  }
+  Serial.println(analogRead(A0)); //read the temperature sensor??
+  Serial.println(analogRead(A1)); //empty pin test
+  temperature = analogRead(A0);
+  setDisplayProperties(50);
+  display.println(temperature);
+  display.print("\xB0""C");
+  display.display();
+  
 }
 
 void setDisplayProperties(int cursor1){
@@ -52,4 +61,5 @@ void setDisplayProperties(int cursor1){
   display.setTextSize(2);
   display.setTextColor(WHITE);
   display.setCursor(cursor1, 10);
+  
 }
